@@ -384,6 +384,49 @@ simba = SIMBA(metric=your_defined_metric, max_steps=12, max_demos=10)
 optimized_program = simba.compile(student=your_dspy_program, trainset=trainset)
 ```
 
+### GEPA
+
+GEPA (Gradient-free Evolutionary Prompt Adaptation) is an evolutionary optimizer that uses reflection to evolve text components of DSPy programs. GEPA captures execution traces, reflects on predictor behavior, and proposes new instructions using textual feedback.
+
+```python
+from dspy.teleprompt import GEPA
+
+# Define a feedback metric that returns score and optional feedback
+def gepa_metric(gold, pred, trace=None, pred_name=None, pred_trace=None):
+    score = float(gold.answer == pred.answer)
+    feedback = "Correct answer" if score == 1.0 else "Incorrect, check reasoning"
+    return {"score": score, "feedback": feedback}
+
+# Initialize GEPA with automatic budget sizing
+gepa_optimizer = GEPA(metric=gepa_metric, auto="light")
+
+# Compile the program
+optimized_program = gepa_optimizer.compile(
+    student=your_dspy_program,
+    trainset=trainset,
+    valset=devset
+)
+```
+
+#### GEPA with Custom Budget
+
+```python
+from dspy.teleprompt import GEPA
+
+# Use specific metric call budget instead of auto
+gepa_optimizer = GEPA(
+    metric=gepa_metric, 
+    max_metric_calls=100,
+    reflection_lm=reflection_lm  # Optional: different LM for reflection
+)
+
+optimized_program = gepa_optimizer.compile(
+    student=your_dspy_program,
+    trainset=trainset,
+    valset=devset
+)
+```
+
 
 ## DSPy Tools and Utilities
 

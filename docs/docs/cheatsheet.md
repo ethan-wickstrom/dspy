@@ -314,7 +314,8 @@ optimized_program.save(f"mipro_optimized")
 
 # Evaluate optimized program
 print(f"Evaluate optimized program...")
-evaluate(optimized_program, devset=devset[:])
+evaluate_program = Evaluate(devset=devset, metric=gsm8k_metric, num_threads=NUM_THREADS, display_progress=True, display_table=0)
+evaluate_program(optimized_program)
 ```
 
 #### Optimizing instructions only with MIPROv2 (0-Shot)
@@ -343,7 +344,8 @@ optimized_program.save(f"mipro_optimized")
 
 # Evaluate optimized program
 print(f"Evaluate optimized program...")
-evaluate(optimized_program, devset=devset[:])
+evaluate_program = Evaluate(devset=devset, metric=gsm8k_metric, num_threads=NUM_THREADS, display_progress=True, display_table=0)
+evaluate_program(optimized_program)
 ```
 
 ### KNNFewShot
